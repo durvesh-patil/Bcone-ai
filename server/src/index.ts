@@ -16,14 +16,8 @@ dotenv.config({ path: envPath });
 const app = new Hono();
 
 // CORS middleware
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    process.env.CLIENT_URL, // Production frontend URL
-].filter(Boolean);
-
 app.use('/*', cors({
-    origin: allowedOrigins,
+    origin: '*', // Allow all origins for simplicity
     credentials: true,
 }));
 
