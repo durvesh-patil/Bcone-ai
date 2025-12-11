@@ -1,4 +1,4 @@
 import { createTRPCReact } from '@trpc/react-query';
-import type { AppRouter } from '../../../server/src/routes/index';
 
-export const trpc = createTRPCReact<AppRouter>();
+// Type-safe client without importing server types
+export const trpc = createTRPCReact<any>();
