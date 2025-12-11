@@ -39,13 +39,20 @@ export async function analyzeNewsEvent(
     const { newsTitle, newsContent, routeOrigin, routeDestination, currentMode } =
         input;
 
+    console.log('\n🔍 [SERVER] Analyzing news event with Mistral AI...');
+    console.log('News:', newsTitle);
+    console.log('Route:', routeOrigin, '→', routeDestination);
+    console.log('Mode:', currentMode);
+
     // Get Mistral client (lazy initialization)
     const client = getMistralClient();
 
     // If no Mistral key, return mock analysis
     if (!client) {
         console.warn('⚠️  No Mistral API key found, using mock analysis');
-        return getMockAnalysis(newsTitle, currentMode);
+        const mockResult = getMockAnalysis(newsTitle, currentMode);
+        console.log('📦 [SERVER] Mock Analysis Result:', JSON.stringify(mockResult, null, 2));
+        return mockResult;
     }
 
     try {
@@ -103,8 +110,15 @@ Respond ONLY with valid JSON matching this exact structure:
             throw new Error('Empty or invalid response from Mistral AI');
         }
 
+        console.log('\n🤖 [SERVER] Raw Mistral AI Response:');
+        console.log(responseText);
+
         const parsed = JSON.parse(responseText);
         const validated = NewsAnalysisSchema.parse(parsed);
+
+        console.log('\n✅ [SERVER] Validated Analysis Result:');
+        console.log(JSON.stringify(validated, null, 2));
+        console.log('======================================\n');
 
         return validated;
     } catch (error) {

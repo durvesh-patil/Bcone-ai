@@ -35,6 +35,16 @@ export function NewsSimulator({
     if (!event) return;
 
     // Analyze the news event with AI
+    console.log("\n🔍 ========== NEWS ANALYSIS START ==========");
+    console.log("📰 Event:", event.title);
+    console.log(
+      "🗺️  Route:",
+      selectedRoute.request.origin,
+      "→",
+      selectedRoute.request.destination
+    );
+    console.log("🚢 Current Mode:", selectedRoute.routes[0].segments[0].mode);
+
     try {
       const analysis = await analyzeNewsMutation.mutateAsync({
         newsTitle: event.title,
@@ -43,6 +53,10 @@ export function NewsSimulator({
         routeDestination: selectedRoute.request.destination,
         currentMode: selectedRoute.routes[0].segments[0].mode,
       });
+
+      console.log("\n🤖 MISTRAL AI RESPONSE:");
+      console.log(JSON.stringify(analysis, null, 2));
+      console.log("========== NEWS ANALYSIS END ==========\n");
 
       setAiAnalysis(analysis);
     } catch (error) {

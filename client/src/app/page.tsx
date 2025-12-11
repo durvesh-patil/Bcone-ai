@@ -13,6 +13,20 @@ export default function Home() {
   const [recalculateTrigger, setRecalculateTrigger] = useState(0);
 
   const handleRecalculateRoutes = () => {
+    console.log("🔴 BUTTON CLICKED - handleRecalculateRoutes called!");
+    console.log("\n⚡ ========== GET ALTERNATIVE ROUTES CLICKED ==========");
+    console.log("📊 Current Route Data BEFORE Recalculation:");
+    console.log(
+      "Routes:",
+      selectedRoute?.routes.map((r: any) => ({
+        mode: r.segments[0].mode,
+        cost: r.totalCost,
+        time: r.totalTime,
+        distance: r.totalDistance,
+      }))
+    );
+    console.log("Disruption Active:", disruptionActive);
+
     // When recalculating due to disruption, we want to show different recommendations
     // In a real system, this would call the API with disruption context
     // For demo: we'll reorder routes to show air/alternative options first
@@ -30,7 +44,25 @@ export default function Home() {
           ...selectedRoute,
           routes: [...otherRoutes, seaRoute], // Sea route goes last
         };
+        console.log("\n✅ Routes REORDERED:");
+        console.log(
+          "New order:",
+          newRouteData.routes.map((r: any) => ({
+            mode: r.segments[0].mode,
+            cost: r.totalCost,
+            time: r.totalTime,
+            isRecommended: r === newRouteData.routes[0],
+          }))
+        );
+        console.log(
+          "🎯 New recommended route:",
+          newRouteData.routes[0].segments[0].mode
+        );
+        console.log("========== RECALCULATION END ==========\n");
         setSelectedRoute(newRouteData);
+      } else {
+        console.log("⚠️  No sea route found to reorder");
+        console.log("========== RECALCULATION END ==========\n");
       }
     } else {
       // Normal recalculation without disruption
